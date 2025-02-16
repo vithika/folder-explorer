@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import json from './data.json'
 
-const ListData = ({ list, addNodeToList,deleteNodeFromList }) => {
+const ListData = ({ list, addNodeToList,deleteNodeFromList ,addFileToList}) => {
   const [isExpanded, setIsExpanded] = useState({})
   return (
     <div className="container">
@@ -23,14 +23,21 @@ const ListData = ({ list, addNodeToList,deleteNodeFromList }) => {
           )}
           <span>{node.name} </span>
           {node?.isFolder && (
-            <span onClick={() => addNodeToList(node.index)}>
+            <><span onClick={() => addNodeToList(node.index)}>
               <img
                 className="add-folder"
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHS6tLr2_N-wrENchm2pcwO8XH1ye1TEWJ20aXnLcjQBk0idlxWAdjUh7wwlXLuVJ076k&usqp=CAU"
                 alt="add"
               ></img>
-             
-            </span>
+
+            <span onClick={() => addFileToList(node.index)}>
+                <img
+                  className="add-file"
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSC93j3R-VV5UIPEkhE2hbUzVadybnZNgiQLw&s"
+                  alt="add"
+                ></img>
+
+              </span></span></>
           )}
           <span onClick={() => deleteNodeFromList(node.index)}>
            <img
@@ -40,7 +47,7 @@ const ListData = ({ list, addNodeToList,deleteNodeFromList }) => {
               ></img>
               </span>
           {isExpanded?.[node.name] && node?.children && (
-            <ListData list={node.children} addNodeToList={addNodeToList} deleteNodeFromList={deleteNodeFromList} />
+            <ListData list={node.children} addNodeToList={addNodeToList} deleteNodeFromList={deleteNodeFromList}  addFileToList={addFileToList}/>
           )}
         </div>
       ))}
@@ -72,6 +79,7 @@ function App() {
       })
     }
     setData((prev) => updateTree(prev))
+    
   }
   const deleteNodeFromList =(itemId)=>
   {
@@ -88,11 +96,34 @@ return list.filter(node=> node.index !== itemId)
 setData(prev => updateTree(prev));
 
   }
+const addFileToList=(parentId)=>
+{
+  const name = prompt('Enter name')
+
+    const updateTree = (list) => {
+      return list.map((node) => {
+        if (node.index === parentId) {
+          return {
+            ...node,
+            children: [
+              ...node.children,
+              { index: Date.now().toString(), name: name, isFolder: false, children: [] },
+            ],
+          }
+        }
+        if (node.children) {
+          return { ...node, children: updateTree(node.children) }
+        }
+        return node
+      })
+    }
+    setData((prev) => updateTree(prev))
+}
 
   return (
     <div className="App">
       Folder-Explorer
-      <ListData list={data} addNodeToList={addNodeToList} deleteNodeFromList={deleteNodeFromList}></ListData>
+      <ListData list={data} addNodeToList={addNodeToList} deleteNodeFromList={deleteNodeFromList} addFileToList={addFileToList}></ListData>
     </div>
   )
 }

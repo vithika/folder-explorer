@@ -12,7 +12,12 @@
 .add-folder
 {
   height: 15px;
-  width: 15px;
+  width: 15px;padding-left: 10px;
+}
+.add-file
+{
+  height: 24px;
+  width: 44px;padding-left: 10px;
 }
 .delete-folder
 {
