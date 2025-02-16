@@ -51,7 +51,7 @@ function App() {
   const [data, setData] = useState(json)
 
   const addNodeToList = (parentId) => {
-    alert(parentId)
+
     const name = prompt('Enter name')
 
     const updateTree = (list) => {
